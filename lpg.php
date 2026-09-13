@@ -136,9 +136,15 @@ if (isset($data['found']) && $data['found'] === true) {
 } else if (is_array($data)) {
     foreach ($data as $key_index => $provider_response) {
         if (isset($provider_response['found']) && $provider_response['found'] === true) {
-            $failed = false;
-            $result = $provider_response;
-            break;
+            // Some providers return found=true but say "No Data Found" in the errorMessage
+            if(!isset($provider_response['errorMessage']) || strtolower($provider_response['errorMessage']) !== 'no data found') {
+                // Ensure it actually has data
+                if(isset($provider_response['consumerDetails']) || isset($provider_response['rawResponse'])) {
+                    $failed = false;
+                    $result = $provider_response;
+                    break;
+                }
+            }
         }
     }
 }
