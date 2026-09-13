@@ -4,7 +4,11 @@ session_start();
 
 // --- Authentication ---
 if(isset($_POST['admin_login'])){
-    if($_POST['password'] === 'admin123'){
+    $st = $pdo->query("SELECT setting_value FROM settings WHERE setting_key = 'admin_password'");
+    $db_pass = $st->fetchColumn();
+    if(!$db_pass) $db_pass = 'admin123';
+    
+    if($_POST['password'] === $db_pass){
         $_SESSION['admin_logged_in'] = true;
         header("Location: swapiadmin.php");
         exit;
@@ -91,6 +95,17 @@ if(isset($_GET['ajax']) && $_GET['ajax'] == 'traffic'){
 if(isset($_GET['reset_daily'])){
     $pdo->exec("UPDATE api_keys SET used_today = 0");
     $msg = "Daily usage counters reset successfully!";
+}
+
+// Change Admin Password
+if(isset($_POST['change_password'])){
+    $new_pass = trim($_POST['new_password']);
+    if(strlen($new_pass) < 4){
+        $msg = "Error: Password must be at least 4 characters.";
+    } else {
+        $pdo->prepare("UPDATE settings SET setting_value = ? WHERE setting_key = 'admin_password'")->execute([$new_pass]);
+        $msg = "Admin password updated successfully!";
+    }
 }
 
 // Analytics AJAX
@@ -279,6 +294,7 @@ $activeTab = $_GET['tab'] ?? 'dashboard';
             <a class="nav-item <?= $activeTab=='traffic'?'active':'' ?>" href="?tab=traffic"><i class="fas fa-bolt"></i> Live Traffic</a>
             
             <div class="nav-label">System</div>
+            <a class="nav-item <?= $activeTab=='settings'?'active':'' ?>" href="?tab=settings"><i class="fas fa-cog"></i> Settings</a>
             <a class="nav-item" href="?reset_daily=1"><i class="fas fa-sync-alt"></i> Reset Daily Limits</a>
         </div>
         <div class="logout-box">
@@ -605,6 +621,26 @@ $activeTab = $_GET['tab'] ?? 'dashboard';
                     }
                 }, 3000);
             </script>
+            <?php endif; ?>
+            
+            <?php if($activeTab == 'settings'): ?>
+            <div class="page-header">
+                <div>
+                    <h2 class="page-title"><i class="fas fa-shield-alt text-indigo"></i> Security Settings</h2>
+                    <div class="page-subtitle">Manage your admin panel security and passwords.</div>
+                </div>
+            </div>
+            
+            <div class="card" style="max-width: 500px;">
+                <h3 class="card-title"><i class="fas fa-key text-indigo"></i> Change Admin Password</h3>
+                <form method="post">
+                    <div class="form-group">
+                        <label class="form-label">New Password</label>
+                        <input type="text" name="new_password" class="form-control" placeholder="Enter new password" required>
+                    </div>
+                    <button type="submit" name="change_password" class="btn btn-primary" style="width: 100%;"><i class="fas fa-save"></i> Update Password</button>
+                </form>
+            </div>
             <?php endif; ?>
             
         </div>
