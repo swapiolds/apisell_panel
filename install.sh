@@ -13,11 +13,9 @@ fi
 echo "[1/5] Updating system packages..."
 apt update && apt upgrade -y
 
-echo "[2/5] Installing Nginx, PHP 8.1, SQLite, and Git..."
-apt install -y nginx software-properties-common git curl
-add-apt-repository -y ppa:ondrej/php
-apt update
-apt install -y php8.1-fpm php8.1-sqlite3 php8.1-curl php8.1-cli php8.1-xml
+echo "[2/5] Installing Nginx, PHP, SQLite, and Git..."
+apt install -y nginx git curl
+apt install -y php-fpm php-sqlite3 php-curl php-cli php-xml
 
 echo "[3/5] Downloading panel from GitHub..."
 cd /var/www/html
@@ -33,7 +31,9 @@ chmod 777 /var/www/html
 chmod 777 /var/www/html/osint_api.db
 
 echo "[5/5] Configuring Nginx..."
-cat > /etc/nginx/sites-available/default << 'EOF'
+PHP_SOCK=$(find /var/run/php -name "php*-fpm.sock" | head -n 1)
+
+cat > /etc/nginx/sites-available/default << EOF
 server {
     listen 80 default_server;
     listen [::]:80 default_server;
@@ -42,12 +42,12 @@ server {
     server_name _;
 
     location / {
-        try_files $uri $uri/ =404;
+        try_files \$uri \$uri/ =404;
     }
 
     location ~ \.php$ {
         include snippets/fastcgi-php.conf;
-        fastcgi_pass unix:/var/run/php/php8.1-fpm.sock;
+        fastcgi_pass unix:$PHP_SOCK;
     }
 
     location ~ /\.ht {
@@ -58,7 +58,7 @@ EOF
 
 # Restart services
 systemctl restart nginx
-systemctl restart php8.1-fpm
+systemctl restart php*-fpm
 
 echo "==========================================="
 echo "   INSTALLATION COMPLETE! 🚀"
