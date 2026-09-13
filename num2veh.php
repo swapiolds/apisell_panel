@@ -136,12 +136,17 @@ if($failed){
     exit;
 }
 
-// Increment Usage since API call succeeded
-$pdo->prepare("UPDATE api_keys SET used_today = used_today + 1, total_used = total_used + 1 WHERE id = ?")->execute([$keyRow['id']]);
+try {
+    // Increment Usage since API call succeeded
+    $pdo->prepare("UPDATE api_keys SET used_today = used_today + 1, total_used = total_used + 1 WHERE id = ?")->execute([$keyRow['id']]);
 
-// Usage Log
-$st = $pdo->prepare("INSERT INTO usage_logs (api_key_id, query, service_type) VALUES (:id, :query, :service)");
-$st->execute([':id' => $keyRow['id'], ':query' => $query, ':service' => $type]);
+    // Usage Log
+    $st = $pdo->prepare("INSERT INTO usage_logs (api_key_id, query, service_type) VALUES (:id, :query, :service)");
+    $st->execute([':id' => $keyRow['id'], ':query' => $query, ':service' => $type]);
+} catch (Exception $e) {
+    // Gracefully ignore database logging errors (e.g. database locked) so the user doesn't get a 500 error
+    // and still gets the requested vehicle data.
+}
 
 echo json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 ?>

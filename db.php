@@ -3,6 +3,8 @@
 try {
     $pdo = new PDO('sqlite:' . __DIR__ . '/osint_api.db');
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->exec('PRAGMA journal_mode = WAL;');
+    $pdo->exec('PRAGMA busy_timeout = 5000;');
 
     // Old Tables (Ensure they exist)
     $pdo->exec("CREATE TABLE IF NOT EXISTS api_keys (
