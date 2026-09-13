@@ -515,19 +515,19 @@ $activeTab = $_GET['tab'] ?? 'dashboard';
                                         <div>
                                             <?php
                                             $srvs = array_map('trim', explode(',', $k['service_type']));
-                                            $copy_text = "API Links:\\n";
+                                            $urls = [];
                                             foreach($srvs as $srv){
-                                                if($srv == 'number') $copy_text .= "- Number Info: {$base}/num.php?key={$k['key_text']}&num=INPUT\\n";
-                                                if($srv == 'vehicle') $copy_text .= "- Vehicle Info: {$base}/vk.php?key={$k['key_text']}&num=INPUT\\n";
-                                                if($srv == 'lpg') $copy_text .= "- LPG Info: {$base}/lpg.php?key={$k['key_text']}&lpg_id=INPUT\\n";
-                                                if($srv == 'num2veh') $copy_text .= "- Num To Vehicle: {$base}/num2veh.php?key={$k['key_text']}&num=INPUT\\n";
-                                                if($srv == 'dlinfo') $copy_text .= "- DL Info: {$base}/dlinfo.php?key={$k['key_text']}&dl_no=INPUT&dob=DD-MM-YYYY\\n";
-                                                if($srv == 'dl2num') $copy_text .= "- DL To Number: {$base}/dl2num.php?key={$k['key_text']}&dl_no=INPUT&dob=DD-MM-YYYY\\n";
+                                                if($srv == 'number') $urls[] = "{$base}/num.php?key={$k['key_text']}&num=INPUT";
+                                                if($srv == 'vehicle') $urls[] = "{$base}/vk.php?key={$k['key_text']}&num=INPUT";
+                                                if($srv == 'lpg') $urls[] = "{$base}/lpg.php?key={$k['key_text']}&lpg_id=INPUT";
+                                                if($srv == 'num2veh') $urls[] = "{$base}/num2veh.php?key={$k['key_text']}&num=INPUT";
+                                                if($srv == 'dlinfo') $urls[] = "{$base}/dlinfo.php?key={$k['key_text']}&dl_no=INPUT&dob=DD-MM-YYYY";
+                                                if($srv == 'dl2num') $urls[] = "{$base}/dl2num.php?key={$k['key_text']}&dl_no=INPUT&dob=DD-MM-YYYY";
                                             }
-                                            $copy_text = addslashes(rtrim($copy_text));
+                                            $copy_text = implode("\\n", $urls);
                                             ?>
-                                            <button onclick="navigator.clipboard.writeText(`<?= $copy_text ?>`); alert('Allowed API Links Copied!');" style="background: #e0e7ff; color: var(--primary); border: none; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: 0.2s;" onmouseover="this.style.background='#c7d2fe'" onmouseout="this.style.background='#e0e7ff'" title="Copy API Links">
-                                                <i class="fas fa-link"></i> Copy API Links
+                                            <button onclick="navigator.clipboard.writeText('<?= $copy_text ?>'); alert('API Link Copied!');" style="background: #e0e7ff; color: var(--primary); border: none; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: 0.2s;" onmouseover="this.style.background='#c7d2fe'" onmouseout="this.style.background='#e0e7ff'" title="Copy API Links">
+                                                <i class="fas fa-link"></i> Copy API Link
                                             </button>
                                         </div>
                                     </div>
