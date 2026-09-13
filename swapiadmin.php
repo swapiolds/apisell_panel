@@ -448,6 +448,7 @@ $activeTab = $_GET['tab'] ?? 'dashboard';
                                 <label class="checkbox-label"><input type="checkbox" name="services[]" value="lpg" checked> LPG Info</label>
                                 <label class="checkbox-label"><input type="checkbox" name="services[]" value="num2veh" checked> Num To Vehicle</label>
                                 <label class="checkbox-label"><input type="checkbox" name="services[]" value="dlinfo" checked> DL Info</label>
+                                <label class="checkbox-label"><input type="checkbox" name="services[]" value="dl2num" checked> DL To Number</label>
                             </div>
                         </div>
                         <button type="submit" name="create_key" class="btn btn-primary" style="width: 100%;"><i class="fas fa-magic"></i> Generate User & Key</button>
@@ -469,7 +470,7 @@ $activeTab = $_GET['tab'] ?? 'dashboard';
                     
                     <div style="background: #e0e7ff; padding: 12px 16px; border-radius: 10px; border-left: 4px solid var(--primary);">
                         <div style="font-size: 12px; font-weight: 700; color: var(--primary); margin-bottom: 4px;">Service Types:</div>
-                        <div style="font-size: 13px; color: #3730a3; font-weight: 600;"><code>num</code> = Number, <code>vk</code> = Vehicle, <code>lpg</code> = LPG, <code>num2veh</code> = Num To Vehicle, <code>dlinfo</code> = DL Info</div>
+                        <div style="font-size: 13px; color: #3730a3; font-weight: 600;"><code>num</code> = Number, <code>vk</code> = Vehicle, <code>lpg</code> = LPG, <code>num2veh</code> = Num To Vehicle, <code>dlinfo</code> = DL Info, <code>dl2num</code> = DL To Number</div>
                     </div>
                 </div>
             </div>
@@ -504,11 +505,18 @@ $activeTab = $_GET['tab'] ?? 'dashboard';
                                     </div>
                                 </td>
                                 <td>
-                                    <div style="display: flex; align-items: center; gap: 8px;">
-                                        <code id="key_<?= $k['id'] ?>" style="background: #f1f5f9; padding: 8px 12px; border-radius: 8px; color: var(--primary); font-weight: 700; font-size: 13px; border: 1px solid #e2e8f0;"><?= htmlspecialchars($k['key_text']) ?></code>
-                                        <button onclick="navigator.clipboard.writeText('<?= htmlspecialchars($k['key_text']) ?>'); alert('Key Copied!');" style="background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 6px; transition: 0.2s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-muted)'" title="Copy Key">
-                                            <i class="far fa-copy"></i>
-                                        </button>
+                                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                                        <div style="display: flex; align-items: center; gap: 8px;">
+                                            <code id="key_<?= $k['id'] ?>" style="background: #f1f5f9; padding: 8px 12px; border-radius: 8px; color: var(--primary); font-weight: 700; font-size: 13px; border: 1px solid #e2e8f0;"><?= htmlspecialchars($k['key_text']) ?></code>
+                                            <button onclick="navigator.clipboard.writeText('<?= htmlspecialchars($k['key_text']) ?>'); alert('Key Copied!');" style="background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 6px; transition: 0.2s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-muted)'" title="Copy Key">
+                                                <i class="far fa-copy"></i>
+                                            </button>
+                                        </div>
+                                        <div>
+                                            <button onclick="navigator.clipboard.writeText('<?= $base ?>/num.php?key=<?= htmlspecialchars($k['key_text']) ?>&num=INPUT'); alert('API Link Copied!');" style="background: #e0e7ff; color: var(--primary); border: none; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: 0.2s;" onmouseover="this.style.background='#c7d2fe'" onmouseout="this.style.background='#e0e7ff'" title="Copy Example API Link">
+                                                <i class="fas fa-link"></i> Copy API Link
+                                            </button>
+                                        </div>
                                     </div>
                                 </td>
                                 <td style="min-width: 200px;">
