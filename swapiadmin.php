@@ -447,6 +447,7 @@ $activeTab = $_GET['tab'] ?? 'dashboard';
                                 <label class="checkbox-label"><input type="checkbox" name="services[]" value="vehicle" checked> Vehicle Info</label>
                                 <label class="checkbox-label"><input type="checkbox" name="services[]" value="lpg" checked> LPG Info</label>
                                 <label class="checkbox-label"><input type="checkbox" name="services[]" value="num2veh" checked> Num To Vehicle</label>
+                                <label class="checkbox-label"><input type="checkbox" name="services[]" value="dlinfo" checked> DL Info</label>
                             </div>
                         </div>
                         <button type="submit" name="create_key" class="btn btn-primary" style="width: 100%;"><i class="fas fa-magic"></i> Generate User & Key</button>
@@ -468,7 +469,7 @@ $activeTab = $_GET['tab'] ?? 'dashboard';
                     
                     <div style="background: #e0e7ff; padding: 12px 16px; border-radius: 10px; border-left: 4px solid var(--primary);">
                         <div style="font-size: 12px; font-weight: 700; color: var(--primary); margin-bottom: 4px;">Service Types:</div>
-                        <div style="font-size: 13px; color: #3730a3; font-weight: 600;"><code>num</code> = Number, <code>vk</code> = Vehicle, <code>lpg</code> = LPG, <code>num2veh</code> = Num To Vehicle</div>
+                        <div style="font-size: 13px; color: #3730a3; font-weight: 600;"><code>num</code> = Number, <code>vk</code> = Vehicle, <code>lpg</code> = LPG, <code>num2veh</code> = Num To Vehicle, <code>dlinfo</code> = DL Info</div>
                     </div>
                 </div>
             </div>
