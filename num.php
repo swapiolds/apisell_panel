@@ -151,18 +151,9 @@ if($data && isset($data['data'])) {
 // Increment Usage since API call succeeded
 $pdo->prepare("UPDATE api_keys SET used_today = used_today + 1, total_used = total_used + 1 WHERE id = ?")->execute([$keyRow['id']]);
 
-$output = [
-    'username' => $keyRow['key_text'],
-    'type' => 'number',
-    'limit_remaining' => $keyRow['daily_limit'] > 0 ? ($keyRow['daily_limit'] - $keyRow['used_today'] - 1) : 'Unlimited',
-    'data' => $result,
-    'BUY_API' => '@swapibhai',
-    'SUPPORT' => '@swapibhai'
-];
-
 // Usage Log
 $st = $pdo->prepare("INSERT INTO usage_logs (api_key_id, query, service_type) VALUES (:id, :query, :service)");
 $st->execute([':id' => $keyRow['id'], ':query' => $query, ':service' => $type]);
 
-echo json_encode($output, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+echo json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 ?>
